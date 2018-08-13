@@ -1,0 +1,21 @@
+<ul id="myUL">
+	{% for t in task %}
+			<li >
+				<h4> {{ t.Title }}</h4>
+				<div >
+					<p> {{ t.Description }}  <br> DueDate {{ t.DueDate.strftime("%d-%B-%Y ") }} </br> 
+					<br>
+					<br>Delete Date {{t.DeleteDate.strftime("%d-%B-%Y ")}}</br>
+					{% if t.Status %}
+						<a href="{{ url_for('status_title',titleId = t.TitleId) }}"> Pending </a>
+					{% else %}
+						 <a href="{{ url_for('status_title',titleId = t.TitleId) }}">Completed</a> 
+					{% endif %}
+					</br>
+					</p>
+
+				</div>
+			</li>
+			<br>
+	{% endfor %}
+</ul>

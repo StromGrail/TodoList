@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body bgcolor="#E6ECFF">
+
+<div align="center">
+<div id="myDIV" class="header">
+	
+	  
+  <h2 align="center">My To Do List</h2>
+  <form method="POST">
+  <input type="text" name="SubTitle" placeholder="SubTitle...">
+  <input type="text" name="Description" placeholder="Description...">
+  <input type="submit" onclick="newElementSubTask(); return false;" class="addBtn" value="Add SubTask"></input>
+</div>
+</form>
+
+<ul id="myUL">
+	{% for t in task %}
+		<li>
+			<h4> {{ t.SubTitle }}</h4>
+			<div>
+				<p> {{ t.SubDescription }}  <br> {{ t.SubDueDate.strftime("%d-%B-%Y ") }} </br> 
+				<br>
+				{% if  t.SubStatus == True %}
+					 <a href="{{ url_for('substatus_title',UnderTitleid=t.UnderTitle,Subid = t.Subid) }}"> Pending </a> 
+				{% else %}
+					 <a href="{{ url_for('substatus_title',UnderTitleid=t.UnderTitle,Subid = t.Subid) }}"> Completed </a>
+				{% endif %}
+					<form align="center" action="{{ url_for('delete_subtitle',UnderTitleid=t.UnderTitle,Subid = t.Subid) }}" method="POST" style="padding-left: 35%;">
+    					<input type="submit" value ='Delete Task' class="buttonD">
+					</form>
+				</br>
+				</p>
+
+			</div>
+		</li>
+  
+
+	{% endfor %}
+</ul>
+</div>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
+

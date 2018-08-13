@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+{% for t in task %}
+	<body bgcolor="#E6ECFF" onload='alertFunc( {{t.AlertTime}} , "{{t.Title}}" , "{{t.DueDate}}" );'>
+{% endfor %}
+<div align="center">
+<div id="myDIV" class="header">
+	<form name ="show" action="{{ url_for('showTask') }}" method= "POST">
+		<select  id="selectVal" name="selectVal" onchange="this.form.submit()">
+		  <option value="Default"> ----- </option>
+		  <option value="Today"> Today </option>
+		  <option value="This Week"> This Week </option>
+		  <option value="Next Week"> Next Week </option>
+		  <option value="Overdue"> Overdue </option>
+		  <option value="All Task"> All Task </option>
+		</select>
+		<noscript><input type="submit" value ='submit' class="buttonD"> </noscript>
+	</form>
+
+	<form name ="search" action="{{ url_for('searchtitle') }}" method= "POST">
+		<select  id="search" name="search" onchange="this.form.submit()">
+			<option value="Default"> ----- </option>
+	{% for t in task %}
+		{% if not t.Is_delete  %}
+			  <option value="{{t.Title}}"> {{t.Title}} </option>
+		{% endif %}
+	{% endfor %}
+		</select>
+		<noscript><input type="submit" value ='submit' class="buttonD"> </noscript>
+	</form>
+	  
+  <h2 align="center">My To Do List</h2>
+  <form method="POST">
+  <input type="text" name="Title" placeholder="Title...">
+  <input type="text" name="Description" placeholder="Description...">
+  <input type="date" name="DueDate" value='document.getElementById("date").innerHTML = Date();' min='document.getElementById("date").innerHTML = Date();' max="2018-12-31" />
+  <input type="text" name="AlertTime" placeholder="Alert....">
+  <input type="submit" onclick="newElement(); return false;" class="addBtn" value="Add Task"></input>
+</div>
+</form>
+
+
+
+<ul id="myUL">
+	{% for t in task %}
+		{% if not t.Is_delete %}
+			<li >
+				<h4> {{ t.Title }}</h4>
+				<div >
+					<p> {{ t.Description }}  <br> {{ t.DueDate.strftime("%d-%B-%Y ") }} </br> 
+					<br>
+					{% if t.Status %}
+						<a href="{{ url_for('status_title',titleId = t.TitleId) }}"> Pending </a>
+					{% else %}
+						 <a href="{{ url_for('status_title',titleId = t.TitleId) }}">Completed</a> 
+					{% endif %}
+						<form align="center" action="{{ url_for('delete_title',titleId = t.TitleId) }}" method="POST" style="padding-left: 20%;">
+	    					<input type="submit" value ='Delete Task' class="buttonD">
+						</form>
+						<form align="center" action="{{ url_for('subtask_title',titleId = t.TitleId) }}" method="POST" style="padding-left: 55%;">
+	    					<input type="submit" value ='Sub-Task' class="buttonD">
+						</form>
+					</br>
+					</p>
+
+				</div>
+			</li>
+		{% endif %}
+	{% endfor %}
+</ul>
+</div>
+
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+<script type="text/javascript">
+
+        function alertFunc(Alert, Title, DueDate) {
+        	var a = new Date();
+			var b = new Date(DueDate);
+            setTimeout(function(){ alert(Title); },(b-a)-Alert*1000 );
+        }
+        </script>
+
+</body>
+</html>
+
